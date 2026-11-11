@@ -40,7 +40,7 @@ export function WhyChooseUs() {
             {points.map((pt, idx) => (
               <div key={idx} className="why-item">
                 <div className="why-item-icon">
-                  <Icon name={pt.icon} style={{ width: "28px", height: "28px" }} />
+                  <Icon name={pt.icon} style={{ width: "32px", height: "32px" }} />
                 </div>
                 <div className="why-item-title">{pt.title}</div>
                 <div className="why-item-desc">{pt.desc}</div>

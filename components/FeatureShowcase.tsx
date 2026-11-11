@@ -54,8 +54,9 @@ export function FeatureShowcase({ onSelectCategory }: FeatureShowcaseProps) {
               engine components built to endure extreme cylinder pressures and
               continuous high-temperature highway cruising.
             </p>
-            <Link href="/products" className="feature-showcase-link">
-              View All Products
+            <Link href="/products" className="btn btn-primary feature-showcase-btn">
+              <span>View All Products</span>
+              <Icon name="arrow-right" style={{ width: "16px", height: "16px" }} />
             </Link>
           </div>
 

@@ -338,8 +338,8 @@ export function ProductCatalog({
                     <div>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
                         <span className="product-category-meta">{item.meta}</span>
-                        <div style={{ display: "flex", alignItems: "center", gap: "2px", color: "var(--accent-gold)", fontSize: "0.75rem", fontWeight: 700 }}>
-                          <Icon name="star" style={{ width: "12px", height: "12px" }} />
+                        <div style={{ display: "flex", alignItems: "center", gap: "3px", color: "var(--accent-gold)", fontSize: "0.84rem", fontWeight: 700 }}>
+                          <Icon name="star" style={{ width: "13px", height: "13px" }} />
                           <span>{item.rating}</span>
                         </div>
                       </div>
@@ -381,13 +381,14 @@ export function ProductCatalog({
                           ₹{item.originalPrice.toLocaleString("en-IN")}
                         </span>
                         <span
+                          className="discount-pill"
                           style={{
-                            fontSize: "0.7rem",
+                            fontSize: "0.82rem",
                             fontWeight: 800,
                             background: "#ecfdf5",
                             color: "#059669",
-                            padding: "2px 6px",
-                            borderRadius: "4px",
+                            padding: "3px 8px",
+                            borderRadius: "6px",
                           }}
                         >
                           -{item.discount}%

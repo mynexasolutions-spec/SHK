@@ -6,6 +6,10 @@ export function SvgSprite() {
       <symbol id="icon-arrow-right" viewBox="0 0 24 24">
         <path d="M5 12h14M12 5l7 7-7 7" />
       </symbol>
+      <symbol id="icon-award" viewBox="0 0 24 24">
+        <circle cx="12" cy="8" r="7" />
+        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+      </symbol>
       <symbol id="icon-shield-check" viewBox="0 0 24 24">
         <path d="M12 3l8 3v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-3z" />
         <path d="M9 12l2 2 4-4" />

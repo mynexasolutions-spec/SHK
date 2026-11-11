@@ -50,18 +50,18 @@ export default function Home() {
         {/* SECTION 1: Industrial Hero with Floating 4-Part Preview Strip */}
         <Hero onOpenQuote={handleOpenQuote} />
 
-        {/* SECTION 2: HİZMETLERİMİZ (2-Column Feature & Core Component Showcase) */}
-        <FeatureShowcase onSelectCategory={handleSelectCategory} />
-
-        {/* SECTION 3: ÇALIŞMA SÜRECİMİZ (Dark 4-Step Supply Chain Process with Connected Lines) */}
-        <ProcessFlow />
-
-        {/* SECTION 4: BAZI ÖRNEKLER (Dispatch-Ready Product Catalog with Pill Category Filters) */}
+        {/* SECTION 2: BAZI ÖRNEKLER (Dispatch-Ready Product Catalog with Pill Category Filters) */}
         <ProductCatalog
           activeCategory={activeCategory}
           onSelectCategory={handleSelectCategory}
           onOpenQuote={handleOpenQuote}
         />
+
+        {/* SECTION 3: HİZMETLERİMİZ (2-Column Feature & Core Component Showcase) */}
+        <FeatureShowcase onSelectCategory={handleSelectCategory} />
+
+        {/* SECTION 4: ÇALIŞMA SÜRECİMİZ (Dark 4-Step Supply Chain Process with Connected Lines) */}
+        <ProcessFlow />
 
         {/* SECTION 5: NEDEN BİZ? (Engineering Expertise & 4-Column Value Prop) */}
         <WhyChooseUs />

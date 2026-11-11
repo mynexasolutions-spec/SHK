@@ -20,11 +20,13 @@ export function Header({ onOpenQuote }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    if (!isHome) return;
-
     const handleScroll = () => {
+      setIsScrolled(window.scrollY > 15);
+
+      if (!isHome) return;
       const scrollPos = window.scrollY + 120;
       const sections = document.querySelectorAll<HTMLElement>("section[id], header[id]");
 
@@ -38,14 +40,15 @@ export function Header({ onOpenQuote }: HeaderProps) {
       });
     };
 
-    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isHome]);
 
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <header className="header" style={{ border: "none", borderBottom: "none", boxShadow: "none", outline: "none" }}>
+    <header className={`header ${isScrolled ? "scrolled" : ""}`}>
       <div className="container">
         <Link href="/" className="logo" aria-label="SHK Auto Homepage">
           <div className="logo-badge">S</div>

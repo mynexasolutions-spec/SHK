@@ -20,10 +20,10 @@ export function CompatibilityMatrix() {
       searchKey: "Hero",
       models: [
         "Splendor Plus / Pro",
-        "HF Deluxe / Dawn",
-        "Passion Pro / XTEC",
+        "HF Deluxe",
+        "Passion Pro",
         "Glamour 125",
-        "Xpulse 200 4V",
+        "Xpulse 200",
         "Pleasure & Maestro",
       ],
     },
@@ -34,10 +34,10 @@ export function CompatibilityMatrix() {
       range: "110cc – 160cc",
       searchKey: "Honda",
       models: [
-        "Activa 3G / 4G / 5G / 6G",
-        "CB Shine 125 & SP125",
+        "Activa (All Gens)",
+        "CB Shine & SP125",
         "Dio 110 / 125",
-        "CB Unicorn 150 / 160",
+        "Unicorn 150 / 160",
         "Hornet 2.0",
         "Livo & CD 110",
       ],
@@ -49,27 +49,12 @@ export function CompatibilityMatrix() {
       range: "100cc – 250cc",
       searchKey: "Pulsar",
       models: [
-        "Pulsar 125 / 150 / 180",
-        "Pulsar 220F / NS200",
+        "Pulsar 125 / 150",
+        "Pulsar 220F / NS",
         "Platina 100 / 110",
         "CT 100 / 110X",
         "Avenger 160 / 220",
         "Discover Series",
-      ],
-    },
-    {
-      name: "TVS Motor",
-      shortName: "TVS",
-      badge: "Performance & Utility",
-      range: "100cc – 200cc",
-      searchKey: "Apache",
-      models: [
-        "Apache RTR 160 / 180 / 200",
-        "Jupiter 110 / 125",
-        "NTorq 125",
-        "Raider 125",
-        "Sport & Star City Plus",
-        "XL100 Heavy Duty",
       ],
     },
   ];
@@ -117,7 +102,7 @@ export function CompatibilityMatrix() {
                 href={`/products?search=${encodeURIComponent(b.searchKey)}`}
                 className="compat-card-link"
               >
-                <span>View {b.name} Spares</span>
+                <span>View {b.name} Spares &rarr;</span>
               </Link>
             </div>
           ))}
