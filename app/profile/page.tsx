@@ -214,17 +214,15 @@ export default function ProfilePage() {
         <section style={{ padding: "40px 0 80px 0" }}>
           <div className="container" style={{ maxWidth: "1140px" }}>
             {user ? (
-              <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: "32px", alignItems: "start" }}>
+              <div className="profile-layout-grid" style={{ alignItems: "start" }}>
                 {/* Left Navigation Sidebar */}
                 <div
+                  className="profile-sidebar-tabs"
                   style={{
                     backgroundColor: "#0e131d",
                     borderRadius: "var(--radius-lg)",
                     border: "1px solid rgba(255, 255, 255, 0.08)",
                     padding: "16px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "6px",
                   }}
                 >
                   <button

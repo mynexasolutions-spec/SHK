@@ -199,9 +199,6 @@ export default function CartPage() {
               /* Two-Column Cart Grid */
               <div
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 380px",
-                  gap: "32px",
                   alignItems: "start",
                 }}
                 className="cart-grid-layout"
@@ -218,10 +215,6 @@ export default function CartPage() {
                           borderRadius: "18px",
                           padding: "20px",
                           border: "1px solid rgba(255, 255, 255, 0.08)",
-                          display: "grid",
-                          gridTemplateColumns: "100px 1fr auto auto",
-                          gap: "20px",
-                          alignItems: "center",
                           transition: "var(--transition)",
                         }}
                         className="cart-item-row"
@@ -286,6 +279,7 @@ export default function CartPage() {
 
                         {/* Quantity Counter */}
                         <div
+                          className="cart-qty-ctrl"
                           style={{
                             display: "flex",
                             alignItems: "center",
@@ -345,7 +339,7 @@ export default function CartPage() {
                         </div>
 
                         {/* Price & Remove */}
-                        <div style={{ textAlign: "right", minWidth: "100px" }}>
+                        <div className="cart-price-col" style={{ textAlign: "right", minWidth: "100px" }}>
                           <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#ffffff", marginBottom: "2px" }}>
                             ₹{(item.product.price * item.quantity).toLocaleString("en-IN")}
                           </div>

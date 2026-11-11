@@ -141,7 +141,7 @@ export default function CheckoutPage() {
         </p>
 
         <form onSubmit={handlePlaceOrder}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "32px", alignItems: "start" }}>
+          <div className="checkout-main-grid" style={{ alignItems: "start" }}>
             
             {/* Left Column: Customer & Shipping Details */}
             <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
@@ -178,7 +178,7 @@ export default function CheckoutPage() {
                   </h3>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+                <div className="checkout-form-grid">
                   <div style={{ gridColumn: "span 2" }}>
                     <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>
                       Full Name *
@@ -307,7 +307,7 @@ export default function CheckoutPage() {
                   </h3>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+                <div className="checkout-form-grid">
                   <div style={{ gridColumn: "span 2" }}>
                     <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>
                       Street Address / Workshop Location *
@@ -496,7 +496,7 @@ export default function CheckoutPage() {
 
                 {/* Payment Option */}
                 <h4 style={{ fontSize: "0.95rem", fontWeight: 700, marginBottom: "10px" }}>Select Payment Mode:</h4>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: "10px" }}>
                   <button
                     type="button"
                     onClick={() => setPaymentMethod("upi")}

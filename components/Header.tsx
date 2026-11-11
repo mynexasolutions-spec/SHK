@@ -58,6 +58,14 @@ export function Header({ onOpenQuote }: HeaderProps) {
         </Link>
 
         <nav>
+          {/* Mobile backdrop */}
+          {menuOpen && (
+            <div
+              className="mobile-nav-backdrop"
+              onClick={closeMenu}
+            />
+          )}
+
           <ul className={`nav-links ${menuOpen ? "active" : ""}`} id="navLinks">
             <li>
               <Link
@@ -103,6 +111,88 @@ export function Header({ onOpenQuote }: HeaderProps) {
               >
                 Contact Us
               </Link>
+            </li>
+
+            {/* Mobile-only drawer actions */}
+            <li className="mobile-drawer-auth">
+              {user ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px", width: "100%" }}>
+                  <div style={{ padding: "8px 12px", background: "rgba(255, 255, 255, 0.05)", borderRadius: "8px", display: "flex", alignItems: "center", gap: "10px" }}>
+                    <div
+                      style={{
+                        width: "28px",
+                        height: "28px",
+                        borderRadius: "50%",
+                        background: "var(--primary)",
+                        color: "#ffffff",
+                        display: "grid",
+                        placeItems: "center",
+                        fontWeight: 800,
+                        fontSize: "0.8rem",
+                      }}
+                    >
+                      {user.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "#ffffff" }}>{user.name}</div>
+                      <div style={{ fontSize: "0.75rem", color: "#94a3b8" }}>{user.phone || user.email}</div>
+                    </div>
+                  </div>
+                  <Link
+                    href="/profile"
+                    onClick={closeMenu}
+                    style={{ textAlign: "center", background: "var(--primary)", color: "#ffffff", padding: "10px", borderRadius: "8px", fontWeight: 700, textDecoration: "none" }}
+                  >
+                    View Account &amp; Orders
+                  </Link>
+                  <button
+                    onClick={() => {
+                      logout();
+                      closeMenu();
+                    }}
+                    style={{ background: "rgba(239, 68, 68, 0.15)", color: "#ef4444", border: "none", padding: "10px", borderRadius: "8px", fontWeight: 700, cursor: "pointer" }}
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px", width: "100%" }}>
+                  <button
+                    onClick={() => {
+                      closeMenu();
+                      openAuthModal("login");
+                    }}
+                    style={{
+                      width: "100%",
+                      padding: "12px",
+                      background: "rgba(255, 255, 255, 0.08)",
+                      border: "1px solid rgba(255, 255, 255, 0.15)",
+                      color: "#ffffff",
+                      borderRadius: "8px",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Log In
+                  </button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => {
+                      closeMenu();
+                      openAuthModal("signup");
+                    }}
+                    style={{
+                      width: "100%",
+                      padding: "12px",
+                      borderRadius: "8px",
+                      fontWeight: 800,
+                      justifyContent: "center",
+                    }}
+                  >
+                    Create Account (Sign Up)
+                  </button>
+                </div>
+              )}
             </li>
           </ul>
         </nav>
@@ -233,6 +323,7 @@ export function Header({ onOpenQuote }: HeaderProps) {
                   boxShadow: pathname === "/profile" ? "0 4px 14px rgba(249, 87, 22, 0.35)" : "var(--shadow-sm)",
                   transition: "var(--transition)",
                 }}
+                className="header-user-btn"
                 title="My Profile"
               >
                 <div
@@ -251,12 +342,14 @@ export function Header({ onOpenQuote }: HeaderProps) {
                 >
                   {user.name.charAt(0).toUpperCase()}
                 </div>
-                <span>{user.name}</span>
-                <Icon name="chevron-down" style={{ width: "12px", height: "12px" }} />
+                <span className="user-name-desktop">{user.name}</span>
+                <span className="user-chevron-desktop">
+                  <Icon name="chevron-down" style={{ width: "12px", height: "12px" }} />
+                </span>
               </Link>
             </div>
           ) : (
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div className="header-auth-desktop" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <button
                 onClick={() => openAuthModal("login")}
                 style={{

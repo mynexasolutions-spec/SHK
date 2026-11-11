@@ -97,7 +97,7 @@ export function ProductQuickView({
           <Icon name="x" />
         </button>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "28px", padding: "28px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "24px", padding: "clamp(16px, 3vw, 28px)" }}>
           {/* Left: Gallery */}
           <div>
             <div

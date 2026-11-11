@@ -207,8 +207,9 @@ export default function WishlistPage() {
                 </div>
               </div>
             ) : (
-              /* Product Cards Grid */
+              /* Product Cards Grid (2 cards per row on mobile) */
               <div
+                className="wishlist-grid"
                 style={{
                   display: "grid",
                   gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",

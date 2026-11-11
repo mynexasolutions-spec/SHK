@@ -97,8 +97,9 @@ function ProductsCatalogInner() {
       <Header onOpenQuote={handleOpenQuote} />
 
       <main style={{ backgroundColor: "#090c13", minHeight: "100vh" }}>
-        {/* Products Hero Banner */}
+        {/* Products Hero Banner (Hidden on mobile) */}
         <section
+          className="products-hero-banner"
           style={{
             background: "linear-gradient(135deg, #090c13 0%, #131926 100%)",
             color: "#ffffff",
@@ -363,276 +364,171 @@ function ProductsCatalogInner() {
                     <div
                       key={item.id}
                       className="product-card"
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        position: "relative",
-                        cursor: "pointer",
-                        background: "#ffffff",
-                        borderRadius: "18px",
-                        border: "1px solid #edf0f5",
-                        overflow: "hidden",
-                        boxShadow: "0 2px 10px rgba(0,0,0,0.03)",
-                        transition: "all 0.28s ease",
-                      }}
+                      data-category={item.category}
+                      style={{ display: "flex", cursor: "pointer", position: "relative" }}
                       onClick={() => router.push(`/products/${item.slug}`)}
                     >
-                      {/* Image Container */}
-                      <div
-                        className="product-image-container"
-                        style={{
-                          position: "relative",
-                          aspectRatio: "16/11",
-                          overflow: "hidden",
-                          background: "#f8fafc",
-                          borderBottom: "1px solid #f1f5f9",
+                      {/* Brand Corner Badge */}
+                      <span className={`product-badge-corner brand-${item.brand.toLowerCase()}`}>
+                        {item.brand === "FUJI" && (
+                          <span
+                            style={{
+                              width: "6px",
+                              height: "6px",
+                              borderRadius: "50%",
+                              background: "#f95716",
+                              display: "inline-block",
+                            }}
+                          />
+                        )}
+                        {item.badge}
+                      </span>
+
+                      {/* Wishlist Button */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleWishlist(item.id);
                         }}
+                        style={{
+                          position: "absolute",
+                          top: "12px",
+                          right: "12px",
+                          zIndex: 3,
+                          width: "32px",
+                          height: "32px",
+                          borderRadius: "var(--radius-full)",
+                          background: "rgba(255, 255, 255, 0.9)",
+                          border: "none",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          cursor: "pointer",
+                          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                          color: isFav ? "#dc2626" : "#64748b",
+                          transition: "transform 0.2s ease",
+                        }}
+                        title={isFav ? "Remove from Wishlist" : "Save to Wishlist"}
                       >
-                        <img
-                          src={item.image}
-                          alt={item.title}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                            transition: "transform 0.4s ease",
-                          }}
-                        />
+                        <Icon name="heart" style={{ width: "16px", height: "16px" }} />
+                      </button>
 
-                        {/* Top Badges */}
-                        <div
-                          style={{
-                            position: "absolute",
-                            top: "10px",
-                            left: "10px",
-                            display: "flex",
-                            gap: "6px",
-                            zIndex: 2,
-                          }}
-                        >
-                          <span
-                            style={{
-                              background: item.brand === "Nexcolle" ? "var(--primary)" : "#0f172a",
-                              color: "#ffffff",
-                              fontSize: "0.7rem",
-                              fontWeight: 800,
-                              padding: "3px 8px",
-                              borderRadius: "6px",
-                              letterSpacing: "0.04em",
-                            }}
-                          >
-                            {item.brand}
-                          </span>
-                          <span
-                            style={{
-                              background: "#ffffff",
-                              color: "#0f172a",
-                              fontSize: "0.7rem",
-                              fontWeight: 700,
-                              padding: "3px 8px",
-                              borderRadius: "6px",
-                              boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-                            }}
-                          >
-                            {item.oemTag}
-                          </span>
-                        </div>
-
-                        {/* Wishlist Button */}
+                      <div className="product-image-container">
+                        <img src={item.image} alt={item.title} />
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            toggleWishlist(item.id);
+                            setQuickViewProduct(item);
                           }}
                           style={{
                             position: "absolute",
-                            top: "10px",
-                            right: "10px",
-                            width: "32px",
-                            height: "32px",
-                            borderRadius: "50%",
-                            background: "rgba(255, 255, 255, 0.9)",
-                            backdropFilter: "blur(4px)",
+                            bottom: "10px",
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            background: "rgba(15, 23, 42, 0.85)",
+                            color: "#fff",
                             border: "none",
-                            display: "grid",
-                            placeItems: "center",
+                            borderRadius: "var(--radius-full)",
+                            padding: "6px 14px",
+                            fontSize: "0.75rem",
+                            fontWeight: 700,
                             cursor: "pointer",
-                            zIndex: 2,
-                            boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "6px",
+                            backdropFilter: "blur(4px)",
                           }}
-                          aria-label="Save to Wishlist"
                         >
-                          <Icon
-                            name="heart"
-                            style={{
-                              width: "16px",
-                              height: "16px",
-                              color: isFav ? "var(--primary)" : "#64748b",
-                              fill: isFav ? "var(--primary)" : "none",
-                            }}
-                          />
+                          <Icon name="eye" style={{ width: "13px", height: "13px" }} /> Quick View
                         </button>
                       </div>
 
-                      {/* Content */}
-                      <div style={{ padding: "16px", display: "flex", flexDirection: "column", flexGrow: 1 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "6px" }}>
-                          <div style={{ display: "flex", color: "#f59e0b" }}>
-                            {[...Array(5)].map((_, i) => (
-                              <Icon
-                                key={i}
-                                name="star"
-                                style={{
-                                  width: "12px",
-                                  height: "12px",
-                                  fill: i < Math.floor(item.rating) ? "#f59e0b" : "none",
-                                }}
-                              />
+                      <div className="product-card-body">
+                        <div>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+                            <span className="product-category-meta">{item.meta}</span>
+                            <div style={{ display: "flex", alignItems: "center", gap: "2px", color: "var(--accent-gold)", fontSize: "0.75rem", fontWeight: 700 }}>
+                              <Icon name="star" style={{ width: "12px", height: "12px" }} />
+                              <span>{item.rating}</span>
+                            </div>
+                          </div>
+
+                          <h3 className="product-title">
+                            <Link
+                              href={`/products/${item.slug}`}
+                              style={{ color: "inherit", textDecoration: "none" }}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {item.title}
+                            </Link>
+                          </h3>
+
+                          <div className="product-spec-list">
+                            {item.specs.slice(0, 2).map((spec, sidx) => (
+                              <span key={sidx} className="spec-pill">
+                                {spec}
+                              </span>
                             ))}
                           </div>
-                          <span style={{ fontSize: "0.74rem", color: "#64748b", fontWeight: 600 }}>
-                            ({item.reviewsCount})
-                          </span>
                         </div>
 
-                        <h3
-                          style={{
-                            fontSize: "0.98rem",
-                            fontWeight: 700,
-                            color: "#090c13",
-                            lineHeight: 1.35,
-                            marginBottom: "6px",
-                          }}
-                        >
-                          <Link
-                            href={`/products/${item.slug}`}
-                            style={{ color: "inherit", textDecoration: "none" }}
-                            onClick={(e) => e.stopPropagation()}
+                        <div>
+                          {/* Price & Savings */}
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "baseline",
+                              gap: "8px",
+                              marginTop: "6px",
+                              marginBottom: "10px",
+                            }}
                           >
-                            {item.title}
-                          </Link>
-                        </h3>
-
-                        <p
-                          style={{
-                            fontSize: "0.8rem",
-                            color: "#64748b",
-                            lineHeight: 1.45,
-                            marginBottom: "12px",
-                            flexGrow: 1,
-                          }}
-                        >
-                          {item.shortDesc}
-                        </p>
-
-                        {/* Fitment Pills */}
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", marginBottom: "12px" }}>
-                          {item.compatibleBikes.slice(0, 2).map((bike, idx) => (
-                            <span
-                              key={idx}
-                              style={{
-                                fontSize: "0.68rem",
-                                background: "#f1f5f9",
-                                color: "#334155",
-                                padding: "2px 7px",
-                                borderRadius: "4px",
-                                fontWeight: 600,
-                              }}
-                            >
-                              {bike}
+                            <span style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--primary)" }}>
+                              ₹{item.price.toLocaleString("en-IN")}
                             </span>
-                          ))}
-                          {item.compatibleBikes.length > 2 && (
+                            <span style={{ fontSize: "0.85rem", textDecoration: "line-through", color: "#94a3b8" }}>
+                              ₹{item.originalPrice.toLocaleString("en-IN")}
+                            </span>
                             <span
                               style={{
-                                fontSize: "0.68rem",
-                                background: "#f1f5f9",
-                                color: "#64748b",
+                                fontSize: "0.7rem",
+                                fontWeight: 800,
+                                background: "#ecfdf5",
+                                color: "#059669",
                                 padding: "2px 6px",
                                 borderRadius: "4px",
                               }}
                             >
-                              +{item.compatibleBikes.length - 2}
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Price & Action Row */}
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            paddingTop: "12px",
-                            borderTop: "1px solid #f1f5f9",
-                          }}
-                        >
-                          <div>
-                            <div style={{ display: "flex", alignItems: "baseline", gap: "6px" }}>
-                              <span style={{ fontSize: "1.15rem", fontWeight: 800, color: "#090c13" }}>
-                                ₹{item.price.toLocaleString("en-IN")}
-                              </span>
-                              <span
-                                style={{
-                                  fontSize: "0.78rem",
-                                  color: "#94a3b8",
-                                  textDecoration: "line-through",
-                                }}
-                              >
-                                ₹{item.originalPrice.toLocaleString("en-IN")}
-                              </span>
-                            </div>
-                            <span
-                              style={{
-                                fontSize: "0.68rem",
-                                fontWeight: 800,
-                                color: "#16a34a",
-                              }}
-                            >
-                              Bulk: ₹{item.wholesaleTiers[0].pricePerUnit}/pc (10+ units)
+                              -{item.discount}%
                             </span>
                           </div>
 
-                          <div style={{ display: "flex", gap: "6px" }}>
+                          {/* Card Footer Actions: Single Full-Width Add to Cart Button */}
+                          <div className="product-card-footer" style={{ borderTop: "1px solid #f1f5f9", paddingTop: "10px" }}>
                             <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setQuickViewProduct(item);
-                              }}
-                              style={{
-                                padding: "8px 10px",
-                                borderRadius: "var(--radius-md)",
-                                border: "1px solid #cbd5e1",
-                                background: "#ffffff",
-                                color: "#0f172a",
-                                cursor: "pointer",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                              title="Quick View"
-                            >
-                              <Icon name="eye" style={{ width: "15px", height: "15px" }} />
-                            </button>
-                            <button
+                              type="button"
                               onClick={(e) => handleQuickAdd(e, item)}
+                              className="btn btn-primary"
                               style={{
-                                padding: "8px 14px",
-                                borderRadius: "var(--radius-md)",
+                                width: "100%",
+                                height: "38px",
+                                borderRadius: "var(--radius-full)",
                                 border: "none",
                                 background: isAdded ? "#10b981" : "var(--primary)",
                                 color: "#ffffff",
                                 fontWeight: 700,
-                                fontSize: "0.82rem",
+                                fontSize: "0.85rem",
                                 cursor: "pointer",
                                 display: "flex",
                                 alignItems: "center",
+                                justifyContent: "center",
                                 gap: "6px",
-                                transition: "background 0.2s ease",
+                                boxShadow: isAdded ? "0 4px 12px rgba(16, 185, 129, 0.35)" : "0 4px 12px rgba(249, 87, 22, 0.3)",
+                                transition: "all 0.2s ease",
                               }}
                             >
                               <Icon name="cart" style={{ width: "15px", height: "15px" }} />
-                              {isAdded ? "Added!" : "Add"}
+                              {isAdded ? "Added to Cart!" : "Add to Cart"}
                             </button>
                           </div>
                         </div>

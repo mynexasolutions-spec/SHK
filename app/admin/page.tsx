@@ -120,6 +120,7 @@ export default function AdminDashboardPage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [adminUser, setAdminUser] = useState<{ name: string; email: string; role: string } | null>(null);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Active section state
@@ -157,6 +158,7 @@ export default function AdminDashboardPage() {
 
   const handleSelectSection = (sectionId: typeof currentSection) => {
     setCurrentSection(sectionId);
+    setMobileSidebarOpen(false);
     if (typeof window !== "undefined") {
       const url = new URL(window.location.href);
       url.searchParams.set("section", sectionId);
@@ -803,6 +805,7 @@ export default function AdminDashboardPage() {
           1. LEFT SIDEBAR (DARK THEME WITH ORANGE ACCENTS)
           ======================================================== */}
       <aside
+        className={`admin-sidebar ${mobileSidebarOpen ? "mobile-open" : ""}`}
         style={{
           width: isSidebarCollapsed ? "80px" : "260px",
           backgroundColor: "#0a0e17",
@@ -949,7 +952,7 @@ export default function AdminDashboardPage() {
         </nav>
 
         {/* Collapse Sidebar Button at Bottom */}
-        <div style={{ padding: "12px 14px", borderTop: "1px solid rgba(255, 255, 255, 0.08)" }}>
+        <div className="admin-collapse-footer" style={{ padding: "12px 14px", borderTop: "1px solid rgba(255, 255, 255, 0.08)" }}>
           <button
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
             style={{
@@ -984,12 +987,21 @@ export default function AdminDashboardPage() {
         </div>
       </aside>
 
+      {/* Mobile Sidebar Backdrop */}
+      {mobileSidebarOpen && (
+        <div
+          className="admin-mobile-backdrop"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
+
       {/* ========================================================
           2. MAIN CONTENT AREA
           ======================================================== */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
         {/* Top Header Bar */}
         <header
+          className="admin-header"
           style={{
             height: "70px",
             backgroundColor: "#0a0e17",
@@ -1003,21 +1015,30 @@ export default function AdminDashboardPage() {
             zIndex: 20,
           }}
         >
-          {/* Breadcrumb Title */}
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <span style={{ fontSize: "0.85rem", color: "#64748b" }}>Admin</span>
-            <span style={{ fontSize: "0.85rem", color: "#64748b" }}>/</span>
-            <span style={{ fontSize: "1.05rem", fontWeight: 700, color: "#ffffff" }}>
+          {/* Breadcrumb Title + Mobile Menu Toggle */}
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", minWidth: 0 }}>
+            <button
+              type="button"
+              className="admin-mobile-toggle"
+              onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+              aria-label="Toggle Navigation"
+            >
+              <Icon name={mobileSidebarOpen ? "x" : "menu"} style={{ width: "20px", height: "20px" }} />
+            </button>
+            <span className="admin-breadcrumb-hide" style={{ fontSize: "0.85rem", color: "#64748b" }}>Admin</span>
+            <span className="admin-breadcrumb-hide" style={{ fontSize: "0.85rem", color: "#64748b" }}>/</span>
+            <span style={{ fontSize: "1.05rem", fontWeight: 700, color: "#ffffff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               {sidebarItems.find((item) => item.id === currentSection)?.label || "Dashboard"}
             </span>
           </div>
 
           {/* Right Header Actions */}
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <div className="admin-header-actions" style={{ display: "flex", alignItems: "center", gap: "12px", flexShrink: 0 }}>
             {/* Storefront Link */}
             <Link
               href="/"
               target="_blank"
+              className="admin-storefront-btn"
               style={{
                 fontSize: "0.82rem",
                 color: "#cbd5e1",
@@ -1030,13 +1051,14 @@ export default function AdminDashboardPage() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "6px",
+                whiteSpace: "nowrap",
               }}
             >
               <span>Storefront</span>
             </Link>
 
             {/* Admin User Profile Pill */}
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div className="admin-user-pill" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <div
                 style={{
                   width: "36px",
@@ -1047,11 +1069,12 @@ export default function AdminDashboardPage() {
                   color: "#10b981",
                   display: "grid",
                   placeItems: "center",
+                  flexShrink: 0,
                 }}
               >
                 <Icon name="user" style={{ width: "18px", height: "18px" }} />
               </div>
-              <div style={{ lineHeight: 1.2 }}>
+              <div className="admin-user-info" style={{ lineHeight: 1.2 }}>
                 <div style={{ fontSize: "0.84rem", fontWeight: 700, color: "#ffffff" }}>
                   {adminUser?.name || "Md Irshad"}
                 </div>
@@ -1064,6 +1087,8 @@ export default function AdminDashboardPage() {
             {/* Logout Button */}
             <button
               onClick={handleLogout}
+              className="admin-logout-btn"
+              title="Logout"
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -1088,13 +1113,13 @@ export default function AdminDashboardPage() {
               }}
             >
               <Icon name="logout" style={{ width: "16px", height: "16px" }} />
-              <span>Logout</span>
+              <span className="admin-logout-text">Logout</span>
             </button>
           </div>
         </header>
 
         {/* Dashboard Body */}
-        <main style={{ padding: "32px 36px 64px 36px", maxWidth: "1400px", width: "100%", margin: "0 auto" }}>
+        <main className="admin-main-content" style={{ maxWidth: "1400px", width: "100%", margin: "0 auto" }}>
           
           {/* ========================================================
               VIEW 1: DASHBOARD / STORE OVERVIEW
@@ -1136,6 +1161,7 @@ export default function AdminDashboardPage() {
 
               {/* Row 1: Attention Cards */}
               <div
+                className="admin-attention-grid"
                 style={{
                   display: "grid",
                   gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
@@ -1146,6 +1172,7 @@ export default function AdminDashboardPage() {
                 {/* Orders to process */}
                 <div
                   onClick={() => handleSelectSection("orders")}
+                  className="admin-attention-card"
                   style={{
                     backgroundColor: "#0d121c",
                     borderRadius: "16px",
@@ -1161,6 +1188,7 @@ export default function AdminDashboardPage() {
                   onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.07)")}
                 >
                   <div
+                    className="card-icon"
                     style={{
                       width: "44px",
                       height: "44px",
@@ -1175,13 +1203,13 @@ export default function AdminDashboardPage() {
                     <Icon name="cart" style={{ width: "20px", height: "20px" }} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", lineHeight: 1.1 }}>
+                    <div className="card-number" style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", lineHeight: 1.1 }}>
                       {pendingOrdersCount}
                     </div>
-                    <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "#f8fafc", marginTop: "2px" }}>
+                    <div className="card-title" style={{ fontSize: "0.85rem", fontWeight: 700, color: "#f8fafc", marginTop: "2px" }}>
                       Orders to process
                     </div>
-                    <div style={{ fontSize: "0.72rem", color: "#64748b" }}>
+                    <div className="card-desc" style={{ fontSize: "0.72rem", color: "#64748b" }}>
                       Pending or processing
                     </div>
                   </div>
@@ -1190,6 +1218,7 @@ export default function AdminDashboardPage() {
                 {/* Reviews to approve */}
                 <div
                   onClick={() => handleSelectSection("reviews")}
+                  className="admin-attention-card"
                   style={{
                     backgroundColor: "#0d121c",
                     borderRadius: "16px",
@@ -1205,6 +1234,7 @@ export default function AdminDashboardPage() {
                   onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.07)")}
                 >
                   <div
+                    className="card-icon"
                     style={{
                       width: "44px",
                       height: "44px",
@@ -1219,13 +1249,13 @@ export default function AdminDashboardPage() {
                     <Icon name="check-circle" style={{ width: "20px", height: "20px" }} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", lineHeight: 1.1 }}>
+                    <div className="card-number" style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", lineHeight: 1.1 }}>
                       {reviews.filter((r) => r.status === "Pending").length}
                     </div>
-                    <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "#f8fafc", marginTop: "2px" }}>
+                    <div className="card-title" style={{ fontSize: "0.85rem", fontWeight: 700, color: "#f8fafc", marginTop: "2px" }}>
                       Reviews to approve
                     </div>
-                    <div style={{ fontSize: "0.72rem", color: "#64748b" }}>
+                    <div className="card-desc" style={{ fontSize: "0.72rem", color: "#64748b" }}>
                       {reviews.filter((r) => r.status === "Pending").length > 0 ? "Pending moderation" : "Nothing waiting"}
                     </div>
                   </div>
@@ -1234,6 +1264,7 @@ export default function AdminDashboardPage() {
                 {/* Open inquiries */}
                 <div
                   onClick={() => handleSelectSection("inquiries")}
+                  className="admin-attention-card"
                   style={{
                     backgroundColor: "#0d121c",
                     borderRadius: "16px",
@@ -1249,6 +1280,7 @@ export default function AdminDashboardPage() {
                   onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.07)")}
                 >
                   <div
+                    className="card-icon"
                     style={{
                       width: "44px",
                       height: "44px",
@@ -1263,13 +1295,13 @@ export default function AdminDashboardPage() {
                     <Icon name="message-square" style={{ width: "20px", height: "20px" }} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", lineHeight: 1.1 }}>
+                    <div className="card-number" style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", lineHeight: 1.1 }}>
                       {pendingInquiriesCount}
                     </div>
-                    <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "#f8fafc", marginTop: "2px" }}>
+                    <div className="card-title" style={{ fontSize: "0.85rem", fontWeight: 700, color: "#f8fafc", marginTop: "2px" }}>
                       Open inquiries
                     </div>
-                    <div style={{ fontSize: "0.72rem", color: "#64748b" }}>
+                    <div className="card-desc" style={{ fontSize: "0.72rem", color: "#64748b" }}>
                       {pendingInquiriesCount > 0 ? `${pendingInquiriesCount} RFQs waiting` : "No open inquiries"}
                     </div>
                   </div>
@@ -1278,6 +1310,7 @@ export default function AdminDashboardPage() {
                 {/* Low stock variants */}
                 <div
                   onClick={() => handleSelectSection("products")}
+                  className="admin-attention-card"
                   style={{
                     backgroundColor: "#0d121c",
                     borderRadius: "16px",
@@ -1293,6 +1326,7 @@ export default function AdminDashboardPage() {
                   onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.07)")}
                 >
                   <div
+                    className="card-icon"
                     style={{
                       width: "44px",
                       height: "44px",
@@ -1307,13 +1341,13 @@ export default function AdminDashboardPage() {
                     <Icon name="check-circle" style={{ width: "20px", height: "20px" }} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", lineHeight: 1.1 }}>
+                    <div className="card-number" style={{ fontSize: "1.3rem", fontWeight: 900, color: "#ffffff", lineHeight: 1.1 }}>
                       {lowStockCount}
                     </div>
-                    <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "#f8fafc", marginTop: "2px" }}>
+                    <div className="card-title" style={{ fontSize: "0.85rem", fontWeight: 700, color: "#f8fafc", marginTop: "2px" }}>
                       Low stock variants
                     </div>
-                    <div style={{ fontSize: "0.72rem", color: "#64748b" }}>
+                    <div className="card-desc" style={{ fontSize: "0.72rem", color: "#64748b" }}>
                       {lowStockCount === 0 ? "Stock looks healthy" : `${lowStockCount} items below threshold`}
                     </div>
                   </div>
@@ -1322,6 +1356,7 @@ export default function AdminDashboardPage() {
 
               {/* Row 2: 4 Key Metric Cards */}
               <div
+                className="admin-metrics-grid"
                 style={{
                   display: "grid",
                   gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
@@ -1330,53 +1365,53 @@ export default function AdminDashboardPage() {
                 }}
               >
                 {/* Metric 1 */}
-                <div style={{ backgroundColor: "#0d121c", borderRadius: "16px", padding: "20px", border: "1px solid rgba(255, 255, 255, 0.07)" }}>
-                  <div style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "rgba(249, 87, 22, 0.15)", color: "var(--primary)", display: "grid", placeItems: "center", fontWeight: 800, fontSize: "1.1rem", marginBottom: "16px" }}>
+                <div className="admin-metric-card" style={{ backgroundColor: "#0d121c", borderRadius: "16px", padding: "20px", border: "1px solid rgba(255, 255, 255, 0.07)" }}>
+                  <div className="metric-icon" style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "rgba(249, 87, 22, 0.15)", color: "var(--primary)", display: "grid", placeItems: "center", fontWeight: 800, fontSize: "1.1rem", marginBottom: "16px" }}>
                     ₹
                   </div>
-                  <div style={{ fontSize: "1.9rem", fontWeight: 900, color: "#ffffff", letterSpacing: "-0.02em" }}>
+                  <div className="metric-value" style={{ fontSize: "1.9rem", fontWeight: 900, color: "#ffffff", letterSpacing: "-0.02em" }}>
                     ₹4,82,650
                   </div>
-                  <div style={{ fontSize: "0.82rem", color: "#94a3b8", fontWeight: 600, marginTop: "4px" }}>
+                  <div className="metric-label" style={{ fontSize: "0.82rem", color: "#94a3b8", fontWeight: 600, marginTop: "4px" }}>
                     Total Revenue
                   </div>
                 </div>
 
                 {/* Metric 2 */}
-                <div style={{ backgroundColor: "#0d121c", borderRadius: "16px", padding: "20px", border: "1px solid rgba(255, 255, 255, 0.07)" }}>
-                  <div style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "rgba(16, 185, 129, 0.15)", color: "#10b981", display: "grid", placeItems: "center", marginBottom: "16px" }}>
+                <div className="admin-metric-card" style={{ backgroundColor: "#0d121c", borderRadius: "16px", padding: "20px", border: "1px solid rgba(255, 255, 255, 0.07)" }}>
+                  <div className="metric-icon" style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "rgba(16, 185, 129, 0.15)", color: "#10b981", display: "grid", placeItems: "center", marginBottom: "16px" }}>
                     <Icon name="cart" style={{ width: "18px", height: "18px" }} />
                   </div>
-                  <div style={{ fontSize: "1.9rem", fontWeight: 900, color: "#ffffff", letterSpacing: "-0.02em" }}>
+                  <div className="metric-value" style={{ fontSize: "1.9rem", fontWeight: 900, color: "#ffffff", letterSpacing: "-0.02em" }}>
                     {orders.length}
                   </div>
-                  <div style={{ fontSize: "0.82rem", color: "#94a3b8", fontWeight: 600, marginTop: "4px" }}>
+                  <div className="metric-label" style={{ fontSize: "0.82rem", color: "#94a3b8", fontWeight: 600, marginTop: "4px" }}>
                     Total Orders
                   </div>
                 </div>
 
                 {/* Metric 3 */}
-                <div style={{ backgroundColor: "#0d121c", borderRadius: "16px", padding: "20px", border: "1px solid rgba(255, 255, 255, 0.07)" }}>
-                  <div style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "rgba(59, 130, 246, 0.15)", color: "#60a5fa", display: "grid", placeItems: "center", marginBottom: "16px" }}>
+                <div className="admin-metric-card" style={{ backgroundColor: "#0d121c", borderRadius: "16px", padding: "20px", border: "1px solid rgba(255, 255, 255, 0.07)" }}>
+                  <div className="metric-icon" style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "rgba(59, 130, 246, 0.15)", color: "#60a5fa", display: "grid", placeItems: "center", marginBottom: "16px" }}>
                     <Icon name="users" style={{ width: "18px", height: "18px" }} />
                   </div>
-                  <div style={{ fontSize: "1.9rem", fontWeight: 900, color: "#ffffff", letterSpacing: "-0.02em" }}>
+                  <div className="metric-value" style={{ fontSize: "1.9rem", fontWeight: 900, color: "#ffffff", letterSpacing: "-0.02em" }}>
                     {customers.length}
                   </div>
-                  <div style={{ fontSize: "0.82rem", color: "#94a3b8", fontWeight: 600, marginTop: "4px" }}>
+                  <div className="metric-label" style={{ fontSize: "0.82rem", color: "#94a3b8", fontWeight: 600, marginTop: "4px" }}>
                     Registered Workshop Garages
                   </div>
                 </div>
 
                 {/* Metric 4 */}
-                <div style={{ backgroundColor: "#0d121c", borderRadius: "16px", padding: "20px", border: "1px solid rgba(255, 255, 255, 0.07)" }}>
-                  <div style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "rgba(245, 158, 11, 0.15)", color: "#f59e0b", display: "grid", placeItems: "center", marginBottom: "16px" }}>
+                <div className="admin-metric-card" style={{ backgroundColor: "#0d121c", borderRadius: "16px", padding: "20px", border: "1px solid rgba(255, 255, 255, 0.07)" }}>
+                  <div className="metric-icon" style={{ width: "36px", height: "36px", borderRadius: "10px", backgroundColor: "rgba(245, 158, 11, 0.15)", color: "#f59e0b", display: "grid", placeItems: "center", marginBottom: "16px" }}>
                     <Icon name="package" style={{ width: "18px", height: "18px" }} />
                   </div>
-                  <div style={{ fontSize: "1.9rem", fontWeight: 900, color: "#ffffff", letterSpacing: "-0.02em" }}>
+                  <div className="metric-value" style={{ fontSize: "1.9rem", fontWeight: 900, color: "#ffffff", letterSpacing: "-0.02em" }}>
                     {inventoryList.length} <span style={{ fontSize: "0.95rem", color: "#64748b", fontWeight: 600 }}>active SKUs</span>
                   </div>
-                  <div style={{ fontSize: "0.82rem", color: "#94a3b8", fontWeight: 600, marginTop: "4px" }}>
+                  <div className="metric-label" style={{ fontSize: "0.82rem", color: "#94a3b8", fontWeight: 600, marginTop: "4px" }}>
                     Active Catalog SKUs
                   </div>
                 </div>
@@ -1384,21 +1419,20 @@ export default function AdminDashboardPage() {
 
               {/* Row 3: Sales Chart & Top Products */}
               <div
+                className="admin-chart-row"
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "2fr 1fr",
                   gap: "20px",
                   marginBottom: "28px",
                 }}
               >
                 {/* Sales Chart */}
-                <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", padding: "24px", border: "1px solid rgba(255, 255, 255, 0.07)" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+                <div className="admin-card" style={{ backgroundColor: "#0d121c", borderRadius: "20px", padding: "24px", border: "1px solid rgba(255, 255, 255, 0.07)" }}>
+                  <div className="admin-chart-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "10px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", fontWeight: 800, fontSize: "1rem", color: "#f8fafc" }}>
                       <Icon name="trending-up" style={{ width: "18px", height: "18px", color: "var(--primary)" }} />
                       <span>Sales, last 14 days</span>
                     </div>
-                    <div style={{ display: "flex", gap: "16px", fontSize: "0.78rem" }}>
+                    <div className="admin-chart-pills" style={{ display: "flex", gap: "12px", fontSize: "0.78rem", flexWrap: "wrap" }}>
                       <div><span style={{ color: "#64748b" }}>Today: </span><span style={{ fontWeight: 800, color: "#ffffff" }}>₹5,100</span></div>
                       <div><span style={{ color: "#64748b" }}>7 days: </span><span style={{ fontWeight: 800, color: "#ffffff" }}>₹42,850</span></div>
                       <div><span style={{ color: "#64748b" }}>30 days: </span><span style={{ fontWeight: 800, color: "var(--primary)" }}>₹4,82,650</span></div>
@@ -1425,8 +1459,8 @@ export default function AdminDashboardPage() {
                 </div>
 
                 {/* Top Products */}
-                <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", padding: "24px", border: "1px solid rgba(255, 255, 255, 0.07)" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                <div className="admin-card" style={{ backgroundColor: "#0d121c", borderRadius: "20px", padding: "24px", border: "1px solid rgba(255, 255, 255, 0.07)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "8px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", fontWeight: 800, fontSize: "1rem", color: "#f8fafc" }}>
                       <Icon name="package" style={{ width: "18px", height: "18px", color: "var(--primary)" }} />
                       <span>Top products</span>
@@ -1461,11 +1495,11 @@ export default function AdminDashboardPage() {
               </div>
 
               {/* Row 4: Quick Actions */}
-              <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", padding: "24px", border: "1px solid rgba(255, 255, 255, 0.07)", marginBottom: "28px" }}>
+              <div className="admin-shortcuts-card admin-card" style={{ backgroundColor: "#0d121c", borderRadius: "20px", padding: "24px", border: "1px solid rgba(255, 255, 255, 0.07)", marginBottom: "28px" }}>
                 <div style={{ fontSize: "1rem", fontWeight: 800, color: "#ffffff", marginBottom: "16px" }}>
                   Quick Shortcuts
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px" }}>
+                <div className="admin-shortcuts-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px" }}>
                   <button
                     onClick={() => {
                       handleSelectSection("products");
@@ -1504,8 +1538,8 @@ export default function AdminDashboardPage() {
               </div>
 
               {/* Row 5: Recent Orders Table */}
-              <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", padding: "24px", border: "1px solid rgba(255, 255, 255, 0.07)" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+              <div className="admin-table-card admin-card" style={{ backgroundColor: "#0d121c", borderRadius: "20px", padding: "24px", border: "1px solid rgba(255, 255, 255, 0.07)" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "8px" }}>
                   <div style={{ fontWeight: 800, fontSize: "1.05rem", color: "#ffffff" }}>
                     Recent Customer Orders
                   </div>
@@ -1517,7 +1551,7 @@ export default function AdminDashboardPage() {
                   </button>
                 </div>
 
-                <div style={{ overflowX: "auto" }}>
+                <div className="admin-table-container" style={{ overflowX: "auto" }}>
                   <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.86rem" }}>
                     <thead>
                       <tr style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.08)", color: "#64748b", fontSize: "0.75rem", fontWeight: 800 }}>
@@ -1567,7 +1601,7 @@ export default function AdminDashboardPage() {
               ======================================================== */}
           {currentSection === "categories" && (
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
+              <div className="admin-section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
                 <div>
                   <h1 style={{ fontSize: "2rem", fontWeight: 900, color: "#ffffff", margin: "0 0 6px 0", letterSpacing: "-0.02em" }}>
                     Categories Management
@@ -1602,7 +1636,7 @@ export default function AdminDashboardPage() {
               </div>
 
               {/* Categories Table */}
-              <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", border: "1px solid rgba(255, 255, 255, 0.07)", overflow: "hidden" }}>
+              <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", border: "1px solid rgba(255, 255, 255, 0.07)", overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.86rem" }}>
                   <thead>
                     <tr style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.08)", color: "#64748b", fontSize: "0.75rem", fontWeight: 800 }}>
@@ -1766,7 +1800,7 @@ export default function AdminDashboardPage() {
               ======================================================== */}
           {currentSection === "products" && (
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
+              <div className="admin-section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
                 <div>
                   <h1 style={{ fontSize: "2rem", fontWeight: 900, color: "#ffffff", margin: "0 0 6px 0", letterSpacing: "-0.02em" }}>
                     Products & Inventory
@@ -1831,7 +1865,7 @@ export default function AdminDashboardPage() {
               </div>
 
               {/* Products Table */}
-              <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", border: "1px solid rgba(255, 255, 255, 0.07)", overflow: "hidden" }}>
+              <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", border: "1px solid rgba(255, 255, 255, 0.07)", overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.86rem" }}>
                   <thead>
                     <tr style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.08)", color: "#64748b", fontSize: "0.75rem", fontWeight: 800 }}>
@@ -2046,7 +2080,7 @@ export default function AdminDashboardPage() {
               ======================================================== */}
           {currentSection === "orders" && (
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
+              <div className="admin-section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
                 <div>
                   <h1 style={{ fontSize: "2rem", fontWeight: 900, color: "#ffffff", margin: "0 0 6px 0", letterSpacing: "-0.02em" }}>
                     Orders & Workshop Dispatches
@@ -2098,7 +2132,7 @@ export default function AdminDashboardPage() {
               </div>
 
               {/* Orders Table */}
-              <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", border: "1px solid rgba(255, 255, 255, 0.07)", overflow: "hidden" }}>
+              <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", border: "1px solid rgba(255, 255, 255, 0.07)", overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.86rem" }}>
                   <thead>
                     <tr style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.08)", color: "#64748b", fontSize: "0.75rem", fontWeight: 800 }}>
@@ -2169,7 +2203,7 @@ export default function AdminDashboardPage() {
               ======================================================== */}
           {currentSection === "home-customization" && (
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px" }}>
+              <div className="admin-section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
                 <div>
                   <h1 style={{ fontSize: "2rem", fontWeight: 900, color: "#ffffff", margin: "0 0 6px 0", letterSpacing: "-0.02em" }}>
                     Home Page Customization
@@ -2282,7 +2316,7 @@ export default function AdminDashboardPage() {
               ======================================================== */}
           {currentSection === "customers" && (
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px" }}>
+              <div className="admin-section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
                 <div>
                   <h1 style={{ fontSize: "2rem", fontWeight: 900, color: "#ffffff", margin: "0 0 6px 0", letterSpacing: "-0.02em" }}>
                     Registered Garages & Mechanics
@@ -2303,7 +2337,7 @@ export default function AdminDashboardPage() {
                 />
               </div>
 
-              <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", border: "1px solid rgba(255, 255, 255, 0.07)", overflow: "hidden" }}>
+              <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", border: "1px solid rgba(255, 255, 255, 0.07)", overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.86rem" }}>
                   <thead>
                     <tr style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.08)", color: "#64748b", fontSize: "0.75rem", fontWeight: 800 }}>
@@ -2364,7 +2398,7 @@ export default function AdminDashboardPage() {
               ======================================================== */}
           {currentSection === "reviews" && (
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px" }}>
+              <div className="admin-section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
                 <div>
                   <h1 style={{ fontSize: "2rem", fontWeight: 900, color: "#ffffff", margin: "0 0 6px 0", letterSpacing: "-0.02em" }}>
                     Reviews & Feedback Moderation
@@ -2455,7 +2489,7 @@ export default function AdminDashboardPage() {
               ======================================================== */}
           {currentSection === "inquiries" && (
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px" }}>
+              <div className="admin-section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
                 <div>
                   <h1 style={{ fontSize: "2rem", fontWeight: 900, color: "#ffffff", margin: "0 0 6px 0", letterSpacing: "-0.02em" }}>
                     B2B Inquiries & Quotation RFQs
@@ -2488,7 +2522,7 @@ export default function AdminDashboardPage() {
                 ))}
               </div>
 
-              <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", border: "1px solid rgba(255, 255, 255, 0.07)", overflow: "hidden" }}>
+              <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", border: "1px solid rgba(255, 255, 255, 0.07)", overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.86rem" }}>
                   <thead>
                     <tr style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.08)", color: "#64748b", fontSize: "0.75rem", fontWeight: 800 }}>
@@ -2552,7 +2586,7 @@ export default function AdminDashboardPage() {
               ======================================================== */}
           {currentSection === "subscribers" && (
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px" }}>
+              <div className="admin-section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
                 <div>
                   <h1 style={{ fontSize: "2rem", fontWeight: 900, color: "#ffffff", margin: "0 0 6px 0", letterSpacing: "-0.02em" }}>
                     Trade Newsletter Subscribers
@@ -2569,7 +2603,7 @@ export default function AdminDashboardPage() {
                 </button>
               </div>
 
-              <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", border: "1px solid rgba(255, 255, 255, 0.07)", overflow: "hidden" }}>
+              <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", border: "1px solid rgba(255, 255, 255, 0.07)", overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.86rem" }}>
                   <thead>
                     <tr style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.08)", color: "#64748b", fontSize: "0.75rem", fontWeight: 800 }}>
@@ -2609,7 +2643,7 @@ export default function AdminDashboardPage() {
               ======================================================== */}
           {currentSection === "hero-slides" && (
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px" }}>
+              <div className="admin-section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
                 <div>
                   <h1 style={{ fontSize: "2rem", fontWeight: 900, color: "#ffffff", margin: "0 0 6px 0", letterSpacing: "-0.02em" }}>
                     Hero Carousel Slides
@@ -2657,7 +2691,7 @@ export default function AdminDashboardPage() {
               ======================================================== */}
           {currentSection === "announcements" && (
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px" }}>
+              <div className="admin-section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
                 <div>
                   <h1 style={{ fontSize: "2rem", fontWeight: 900, color: "#ffffff", margin: "0 0 6px 0", letterSpacing: "-0.02em" }}>
                     Store Announcements & Top Banner
@@ -2732,7 +2766,7 @@ export default function AdminDashboardPage() {
               ======================================================== */}
           {currentSection === "coupons" && (
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px" }}>
+              <div className="admin-section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
                 <div>
                   <h1 style={{ fontSize: "2rem", fontWeight: 900, color: "#ffffff", margin: "0 0 6px 0", letterSpacing: "-0.02em" }}>
                     Coupons & Trade Discount Codes
@@ -2749,7 +2783,7 @@ export default function AdminDashboardPage() {
                 </button>
               </div>
 
-              <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", border: "1px solid rgba(255, 255, 255, 0.07)", overflow: "hidden" }}>
+              <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", border: "1px solid rgba(255, 255, 255, 0.07)", overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.86rem" }}>
                   <thead>
                     <tr style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.08)", color: "#64748b", fontSize: "0.75rem", fontWeight: 800 }}>
@@ -2883,7 +2917,7 @@ export default function AdminDashboardPage() {
               ======================================================== */}
           {currentSection === "delivery-settings" && (
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px" }}>
+              <div className="admin-section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
                 <div>
                   <h1 style={{ fontSize: "2rem", fontWeight: 900, color: "#ffffff", margin: "0 0 6px 0", letterSpacing: "-0.02em" }}>
                     Delivery & Logistics Settings
@@ -2900,7 +2934,7 @@ export default function AdminDashboardPage() {
                 </button>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
+              <div className="admin-delivery-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
                 <div style={{ backgroundColor: "#0d121c", borderRadius: "20px", padding: "24px", border: "1px solid rgba(255, 255, 255, 0.07)" }}>
                   <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#ffffff", marginTop: 0, marginBottom: "16px" }}>
                     Freight & Surcharge Rules
@@ -2963,7 +2997,7 @@ export default function AdminDashboardPage() {
               ======================================================== */}
           {currentSection === "faqs" && (
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px" }}>
+              <div className="admin-section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
                 <div>
                   <h1 style={{ fontSize: "2rem", fontWeight: 900, color: "#ffffff", margin: "0 0 6px 0", letterSpacing: "-0.02em" }}>
                     Global Store FAQs

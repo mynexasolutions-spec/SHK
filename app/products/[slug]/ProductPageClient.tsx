@@ -217,12 +217,10 @@ export function ProductPageClient({
 
           {/* Product Hero Grid: Gallery + Purchasing Card */}
           <div
+            className="pdp-main-grid"
             style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))",
-              gap: "40px",
               backgroundColor: "#ffffff",
-              padding: "clamp(24px, 4vw, 36px)",
+              padding: "clamp(18px, 4vw, 36px)",
               borderRadius: "24px",
               border: "1px solid #e2e8f0",
               boxShadow: "0 4px 20px rgba(0, 0, 0, 0.04)",
@@ -515,6 +513,7 @@ export function ProductPageClient({
               {/* Action Buttons: Stepper + Add to Cart + Buy Now in ONE Row */}
               <div
                 id="mainBuyAction"
+                className="pdp-action-buttons"
                 style={{
                   display: "flex",
                   gap: "10px",
@@ -1251,196 +1250,161 @@ export function ProductPageClient({
                 </Link>
               </div>
 
-              {/* 4-Column Balanced Grid */}
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-                  gap: "22px",
-                }}
-              >
+              {/* 4-Column Balanced Grid (2 cards per row on mobile) */}
+              <div className="product-grid">
                 {relatedProducts.map((rel) => {
                   const isRelFav = isInWishlist(rel.id);
+                  const isAdded = relatedAddedId === rel.id;
+
                   return (
                     <div
                       key={rel.id}
                       className="product-card"
-                      style={{
-                        background: "#ffffff",
-                        borderRadius: "18px",
-                        border: "1px solid #edf0f5",
-                        overflow: "hidden",
-                        display: "flex",
-                        flexDirection: "column",
-                        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.03)",
-                        transition: "all 0.28s ease",
-                        cursor: "pointer",
-                      }}
+                      data-category={rel.category}
+                      style={{ display: "flex", cursor: "pointer", position: "relative" }}
                       onClick={() => router.push(`/products/${rel.slug}`)}
                     >
-                      {/* Image Frame with Aspect Ratio */}
-                      <div
-                        style={{
-                          position: "relative",
-                          width: "100%",
-                          aspectRatio: "16 / 10",
-                          overflow: "hidden",
-                          background: "#090c13",
-                        }}
-                      >
-                        <img
-                          src={rel.image}
-                          alt={rel.title}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                            transition: "transform 0.4s ease",
-                          }}
-                        />
-
-                        {/* OEM Badge */}
-                        <div style={{ position: "absolute", top: "10px", left: "10px", zIndex: 2 }}>
+                      {/* Brand Corner Badge */}
+                      <span className={`product-badge-corner brand-${rel.brand.toLowerCase()}`}>
+                        {rel.brand === "FUJI" && (
                           <span
                             style={{
-                              fontSize: "0.7rem",
-                              background: rel.brand === "Nexcolle" ? "var(--primary)" : "#0f172a",
-                              color: "#ffffff",
-                              padding: "3px 8px",
-                              borderRadius: "6px",
-                              fontWeight: 800,
-                              textTransform: "uppercase",
-                              boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-                            }}
-                          >
-                            {rel.oemTag}
-                          </span>
-                        </div>
-
-                        {/* Wishlist Button */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleWishlist(rel.id);
-                          }}
-                          style={{
-                            position: "absolute",
-                            top: "10px",
-                            right: "10px",
-                            width: "32px",
-                            height: "32px",
-                            borderRadius: "50%",
-                            background: "rgba(255, 255, 255, 0.92)",
-                            backdropFilter: "blur(6px)",
-                            border: "none",
-                            display: "grid",
-                            placeItems: "center",
-                            cursor: "pointer",
-                            zIndex: 2,
-                            boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-                          }}
-                          aria-label="Save to Wishlist"
-                        >
-                          <Icon
-                            name="heart"
-                            style={{
-                              width: "15px",
-                              height: "15px",
-                              color: isRelFav ? "var(--primary)" : "#64748b",
-                              fill: isRelFav ? "var(--primary)" : "none",
+                              width: "6px",
+                              height: "6px",
+                              borderRadius: "50%",
+                              background: "#f95716",
+                              display: "inline-block",
                             }}
                           />
-                        </button>
+                        )}
+                        {rel.badge || rel.oemTag}
+                      </span>
+
+                      {/* Wishlist Button */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleWishlist(rel.id);
+                        }}
+                        style={{
+                          position: "absolute",
+                          top: "12px",
+                          right: "12px",
+                          zIndex: 3,
+                          width: "32px",
+                          height: "32px",
+                          borderRadius: "var(--radius-full)",
+                          background: "rgba(255, 255, 255, 0.9)",
+                          border: "none",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          cursor: "pointer",
+                          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                          color: isRelFav ? "#dc2626" : "#64748b",
+                          transition: "transform 0.2s ease",
+                        }}
+                        title={isRelFav ? "Remove from Wishlist" : "Save to Wishlist"}
+                      >
+                        <Icon name="heart" style={{ width: "16px", height: "16px" }} />
+                      </button>
+
+                      <div className="product-image-container">
+                        <img src={rel.image} alt={rel.title} />
                       </div>
 
-                      {/* Card Content */}
-                      <div style={{ padding: "16px", display: "flex", flexDirection: "column", flexGrow: 1 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "6px" }}>
-                          <div style={{ display: "flex", color: "#f59e0b" }}>
-                            {[...Array(5)].map((_, i) => (
-                              <Icon
-                                key={i}
-                                name="star"
-                                style={{
-                                  width: "12px",
-                                  height: "12px",
-                                  fill: i < Math.floor(rel.rating) ? "#f59e0b" : "none",
-                                }}
-                              />
+                      <div className="product-card-body">
+                        <div>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+                            <span className="product-category-meta">{rel.meta}</span>
+                            <div style={{ display: "flex", alignItems: "center", gap: "2px", color: "var(--accent-gold)", fontSize: "0.75rem", fontWeight: 700 }}>
+                              <Icon name="star" style={{ width: "12px", height: "12px" }} />
+                              <span>{rel.rating}</span>
+                            </div>
+                          </div>
+
+                          <h3 className="product-title">
+                            <Link
+                              href={`/products/${rel.slug}`}
+                              style={{ color: "inherit", textDecoration: "none" }}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {rel.title}
+                            </Link>
+                          </h3>
+
+                          <div className="product-spec-list">
+                            {rel.specs && rel.specs.slice(0, 2).map((spec, sidx) => (
+                              <span key={sidx} className="spec-pill">
+                                {spec}
+                              </span>
                             ))}
                           </div>
-                          <span style={{ fontSize: "0.72rem", color: "#64748b", fontWeight: 600 }}>
-                            ({rel.reviewsCount})
-                          </span>
                         </div>
 
-                        <h4
-                          style={{
-                            fontSize: "0.95rem",
-                            fontWeight: 700,
-                            color: "#090c13",
-                            lineHeight: 1.35,
-                            marginBottom: "6px",
-                          }}
-                        >
-                          {rel.title}
-                        </h4>
-
-                        <p
-                          style={{
-                            fontSize: "0.78rem",
-                            color: "#64748b",
-                            lineHeight: 1.45,
-                            marginBottom: "12px",
-                            flexGrow: 1,
-                          }}
-                        >
-                          {rel.shortDesc}
-                        </p>
-
-                        {/* Price & Action Row */}
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            paddingTop: "12px",
-                            borderTop: "1px solid #f1f5f9",
-                            marginTop: "auto",
-                          }}
-                        >
-                          <div>
-                            <span style={{ fontSize: "1.15rem", fontWeight: 800, color: "#090c13" }}>
+                        <div>
+                          {/* Price & Savings */}
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "baseline",
+                              gap: "8px",
+                              marginTop: "6px",
+                              marginBottom: "10px",
+                            }}
+                          >
+                            <span style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--primary)" }}>
                               ₹{rel.price.toLocaleString("en-IN")}
                             </span>
-                            <span
-                              style={{
-                                fontSize: "0.74rem",
-                                color: "#94a3b8",
-                                textDecoration: "line-through",
-                                marginLeft: "6px",
-                              }}
-                            >
-                              ₹{rel.originalPrice.toLocaleString("en-IN")}
-                            </span>
+                            {rel.originalPrice && (
+                              <span style={{ fontSize: "0.85rem", textDecoration: "line-through", color: "#94a3b8" }}>
+                                ₹{rel.originalPrice.toLocaleString("en-IN")}
+                              </span>
+                            )}
+                            {rel.discount && (
+                              <span
+                                style={{
+                                  fontSize: "0.7rem",
+                                  fontWeight: 800,
+                                  background: "#ecfdf5",
+                                  color: "#059669",
+                                  padding: "2px 6px",
+                                  borderRadius: "4px",
+                                }}
+                              >
+                                -{rel.discount}%
+                              </span>
+                            )}
                           </div>
 
-                          <button
-                            className="btn btn-primary"
-                            style={{
-                              padding: "7px 14px",
-                              fontSize: "0.78rem",
-                              fontWeight: 700,
-                              borderRadius: "var(--radius-full)",
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "6px",
-                            }}
-                            onClick={(e) => handleQuickAddRelated(e, rel)}
-                          >
-                            <Icon name="cart" style={{ width: "13px", height: "13px" }} />
-                            {relatedAddedId === rel.id ? "Added!" : "Add"}
-                          </button>
+                          {/* Card Footer Actions: Single Full-Width Add to Cart Button */}
+                          <div className="product-card-footer" style={{ borderTop: "1px solid #f1f5f9", paddingTop: "10px" }}>
+                            <button
+                              type="button"
+                              onClick={(e) => handleQuickAddRelated(e, rel)}
+                              className="btn btn-primary"
+                              style={{
+                                width: "100%",
+                                height: "38px",
+                                borderRadius: "var(--radius-full)",
+                                border: "none",
+                                background: isAdded ? "#10b981" : "var(--primary)",
+                                color: "#ffffff",
+                                fontWeight: 700,
+                                fontSize: "0.85rem",
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                gap: "6px",
+                                boxShadow: isAdded ? "0 4px 12px rgba(16, 185, 129, 0.35)" : "0 4px 12px rgba(249, 87, 22, 0.3)",
+                                transition: "all 0.2s ease",
+                              }}
+                            >
+                              <Icon name="cart" style={{ width: "15px", height: "15px" }} />
+                              {isAdded ? "Added to Cart!" : "Add to Cart"}
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>

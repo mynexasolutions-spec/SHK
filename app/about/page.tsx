@@ -108,7 +108,7 @@ export default function AboutPage() {
           }}
         >
           <div className="container" style={{ maxWidth: "1080px" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "48px", alignItems: "center" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "48px", alignItems: "center" }}>
               <div>
                 <span
                   style={{
