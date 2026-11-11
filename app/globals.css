@@ -3005,6 +3005,41 @@
   gap: 20px;
   align-items: center;
 }
+.cart-item-thumb {
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #090c13;
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.cart-item-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.cart-item-details {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.cart-item-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 6px;
+  line-height: 1.35;
+  word-break: break-word;
+  transition: color 0.2s ease;
+}
+.cart-item-title:hover {
+  color: var(--primary);
+}
 @media (max-width: 992px) {
   .cart-grid-layout {
     grid-template-columns: 1fr !important;
@@ -3013,13 +3048,41 @@
 }
 @media (max-width: 640px) {
   .cart-item-row {
-    grid-template-columns: 76px 1fr !important;
-    gap: 14px !important;
+    grid-template-columns: 80px 1fr !important;
+    column-gap: 14px !important;
+    row-gap: 12px !important;
     padding: 16px 14px !important;
+    align-items: start !important;
+  }
+  .cart-item-thumb {
+    width: 80px !important;
+    height: 80px !important;
+    border-radius: 10px !important;
+  }
+  .cart-item-details {
+    min-width: 0 !important;
+  }
+  .cart-item-title {
+    font-size: 0.88rem !important;
+    line-height: 1.3 !important;
+    margin-bottom: 4px !important;
   }
   .cart-item-row .cart-qty-ctrl {
     grid-column: 1 / 2;
     margin-top: 4px;
+    padding: 3px 6px !important;
+    justify-content: space-between !important;
+    width: 80px !important;
+    box-sizing: border-box !important;
+  }
+  .cart-item-row .cart-qty-ctrl button {
+    width: 22px !important;
+    height: 22px !important;
+    font-size: 0.95rem !important;
+  }
+  .cart-item-row .cart-qty-ctrl span {
+    width: 22px !important;
+    font-size: 0.82rem !important;
   }
   .cart-item-row .cart-price-col {
     grid-column: 2 / 3;
@@ -3029,6 +3092,15 @@
     text-align: left !important;
     min-width: 0 !important;
     margin-top: 4px;
+    gap: 8px;
+  }
+  .cart-item-row .cart-price-col > div:first-child {
+    font-size: 0.98rem !important;
+    margin-bottom: 0 !important;
+  }
+  .cart-item-row .cart-price-col > div:nth-child(2) {
+    font-size: 0.72rem !important;
+    margin-bottom: 0 !important;
   }
 }
 

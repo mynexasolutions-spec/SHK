@@ -222,25 +222,16 @@ export default function CartPage() {
                         {/* Thumbnail */}
                         <Link
                           href={`/products/${item.product.slug}`}
-                          style={{
-                            width: "100px",
-                            height: "100px",
-                            borderRadius: "12px",
-                            overflow: "hidden",
-                            background: "#090c13",
-                            display: "block",
-                            border: "1px solid rgba(255, 255, 255, 0.08)",
-                          }}
+                          className="cart-item-thumb"
                         >
                           <img
                             src={item.product.image}
                             alt={item.product.title}
-                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
                           />
                         </Link>
 
                         {/* Details */}
-                        <div>
+                        <div className="cart-item-details">
                           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
                             <span
                               style={{
@@ -259,14 +250,7 @@ export default function CartPage() {
 
                           <Link
                             href={`/products/${item.product.slug}`}
-                            style={{
-                              fontSize: "1rem",
-                              fontWeight: 700,
-                              color: "#ffffff",
-                              textDecoration: "none",
-                              display: "block",
-                              marginBottom: "6px",
-                            }}
+                            className="cart-item-title"
                           >
                             {item.product.title}
                           </Link>
